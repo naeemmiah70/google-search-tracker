@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#extension-body {
+  height: 400px;
+  width: 320px;
+  border-radius: 1;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#extension-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+#extension-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+#extension-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+#extension-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+.extension-header {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+}
+
+.extension-header h2 {
+  font-family: "Archivo";
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+  color: #212121;
+  padding: 10px;
+}
+
+.extension-header hr {
+  border-top: 1px solid #21212183;
+}
+
+.extension-header h3 {
+  font-family: "Nunito";
+  font-weight: 700;
+  font-size: 18px;
+  color: #212121;
+  padding: 5px 10px;
+}
+
+.content-body {
+  padding: 10px;
+}
+
+
+
+.content-body h5 {
+  font-family: "Nunito";
+  font-weight: 700;
+  font-size: 16px;
+  color: #212121;
+  line-height: 22px;
+}
+
+.query-card {
+  width: 95%;
+  height: auto;
+  padding: 7px;
+  border-radius: 4px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 10px;
+}
+
+.query-card button {
+  border: 0;
+  background: none;
+  font-family: "Nunito";
+  font-weight: 400;
+  font-size: 12px;
+  color: #0c8ae6;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.results-card {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px;
+  width: 85%;
+}
+
+.results-card a {
+  font-family: "Nunito";
+  font-weight: 400;
+  font-size: 12px;
+  color: #212121;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.results-card a:hover {
+  color: #0c8ae6 !important;
+}
+
+#no-data-section {
+  width: 100%;
+  text-align: center;
+}
+
+#no-data-section h4 {
+  font-family: "Nunito";
+  font-weight: 700;
+  font-size: 16px;
+  color: #21212172;
+  line-height: 22px;
+  margin-top: 110px;
+}
+
+#reset-btn button {
+  width: 100%;
+  text-align: center;
+  background: #0c8ae6;
+  border: 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: #fff;
+  font-family: "Nunito";
+  font-size: 13px;
+  margin-top: 10px;
+  cursor: pointer;
+}

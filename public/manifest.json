@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Google Search Tracker",
+  "version": "1.0",
+  "description": "This is a google search tracker extension.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.google.com/*",
+        "https://myactivity.google.com/*"
+      ],
+      "js": [
+        "contentScript.min.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "Google Search Tracker",
+    "default_popup": "./index.html",
+    "default_icon": {
+      "16": "assets/search.png",
+      "48": "assets/search.png",
+      "128": "assets/search.png"
+    }
+  },
+  "icons": {
+    "16": "assets/search.png",
+    "48": "assets/search.png",
+    "128": "assets/search.png"
+  }
+}
