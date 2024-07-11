@@ -48,6 +48,8 @@ function getSelectedResults() {
 
         if (event.target.checked) {
           selectedResults.push({ title: title.innerText, link: link.href });
+          // highlighting the selected link titile
+          title.style.backgroundColor = "#DFFF00";
         } else {
           const indexToRemove = selectedResults.findIndex(
             (item) => item.link === link.href
@@ -141,23 +143,11 @@ function storeSearchResults(resultsData) {
   });
 }
 
-const handleHighlight = () => {
-  const searchResults = document.querySelectorAll("h3");
-  console.log("for high light", searchResults);
-  for (let i = 0; i < 5; i++) {
-    console.log("for high light", searchResults[i]);
-    searchResults[i].style.backgroundColor = "#DFFF00";
-  }
-};
-
 const domContentLoaded = () => {
   getSelectedResults();
 };
 // calling function when the google reasult page content is loaded
 domContentLoaded();
-
-// highlighting the top five resutls titile
-// handleHighlight();
 
 // Listen for messages from the background script
 // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

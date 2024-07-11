@@ -85,7 +85,7 @@
   margin-bottom: 10px;
 }
 
-.query-card button {
+#show-result-btn {
   border: 0;
   background: none;
   font-family: "Nunito";
@@ -94,6 +94,18 @@
   color: #0c8ae6;
   cursor: pointer;
   text-decoration: underline;
+}
+
+#remove-btn {
+  border: 0;
+  background: none;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+#remove-btn img {
+  width: 100%;
 }
 
 .results-card {
