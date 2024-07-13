@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     chrome.storage.local.get("searchResults", function (data) {
-      console.log("search results from app.js", data);
+      // console.log("search results from app.js", data);
       setResults(data?.searchResults);
     });
   }, [resultUpdated]);
@@ -21,7 +21,7 @@ function App() {
   //     setReseultUpdated((resultUpdated) => !resultUpdated);
   //   }
   // });
-  console.log("status", resultUpdated);
+  // console.log("status", resultUpdated);
 
   //function to remove all data
   const handleClearData = () => {
@@ -30,24 +30,38 @@ function App() {
       setReseultUpdated((resultUpdated) => !resultUpdated);
     });
   };
-  console.log("searchResults from app", results);
+  // console.log("searchResults from app", results);
 
   // function to remove the query
   const handleRemoveQuery = (index) => {
-    console.log("remove index", index);
-
     if (index > -1 && index < results.length) {
       results.splice(index, 1);
     }
-    console.log("updated results", results);
-    hamdleUpdateResultStorage(results);
+    // console.log("updated results", results);
+    handleUpdateResultStorage(results);
+  };
+
+  // function to remove the query results links
+  const handleRemoveLink = (outerIndex, nestedIndex) => {
+    console.log("link index", outerIndex, nestedIndex);
+
+    if (outerIndex > -1 && outerIndex < results.length) {
+      let nestedArray = results[outerIndex].selectedResults;
+      // console.log("nestedarray", nestedArray)
+      if (nestedArray && nestedIndex > -1 && nestedIndex < nestedArray.length) {
+        nestedArray.splice(nestedIndex, 1);
+      }
+    }
+    // console.log("updatedLink", results);
+    handleUpdateResultStorage(results);
   };
 
   //function to update the storage after remove specific data
-  const hamdleUpdateResultStorage = (results) => {
+  const handleUpdateResultStorage = (results) => {
     chrome.storage.local.set({ searchResults: results });
     setReseultUpdated((resultUpdated) => !resultUpdated);
   };
+
   return (
     <section id="extension-body">
       <div className="extension-header">
@@ -57,41 +71,50 @@ function App() {
       </div>
       {results.length ? (
         <div className="content-body">
-          {results?.map((item, index) => (
+          {results?.map((item, outerIndex) => (
             <div className="query-card">
-              <div style={{ display: "flex", gap: "7px" }}>
+              <div>
                 <h5>
-                  <span>{index + 1}.</span> {item?.query}.
+                  <span>{outerIndex + 1}.</span> {item?.query}.
+                  <button
+                    id="remove-btn"
+                    onClick={() => handleRemoveQuery(outerIndex)}
+                  >
+                    {" "}
+                    <img src={deleteIcon} alt="" />
+                  </button>
                 </h5>
-                <button
-                  id="remove-btn"
-                  onClick={() => handleRemoveQuery(index)}
-                >
-                  {" "}
-                  <img src={deleteIcon} alt="" />
-                </button>
               </div>
               <div>
-                {show && cardNo === index && (
+                {show && cardNo === outerIndex && (
                   <div>
-                    {item?.selectedResults?.map((data, index) => (
+                    {item?.selectedResults?.map((data, nestedIndex) => (
                       <div className="results-card">
                         <a href={data.link} target="_blank">
                           {data.title}
                         </a>
-                        <button>Remove</button>
+                        <button
+                          id="remove-btn"
+                          onClick={() =>
+                            handleRemoveLink(outerIndex, nestedIndex)
+                          }
+                        >
+                          {" "}
+                          <img src={deleteIcon} alt="" />
+                        </button>
                       </div>
                     ))}
                   </div>
                 )}
                 <button
                   onClick={() => {
-                    setCardNo(index);
+                    setCardNo(outerIndex);
                     setShow((show) => !show);
                   }}
                   id="show-result-btn"
                 >
-                  {cardNo === index && show ? "Hide" : "See"} the results...
+                  {cardNo === outerIndex && show ? "Hide" : "See"} the
+                  results...
                 </button>
               </div>
             </div>

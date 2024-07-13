@@ -18,11 +18,46 @@ const getQuery = () => {
   return searchQuery;
 };
 
+const handlePrevioslyStoredQuery = (query) => {
+  const hThree = [];
+  chrome.storage.local.get("searchResults", function (data) {
+    let searchResults = data.searchResults || [];
+
+    if (searchResults) {
+      searchResults.forEach((item) => {
+        if (item.query === query) {
+          const results = document.querySelectorAll("div.g");
+          results.forEach((result) => {
+            const title = result.querySelector("h3");
+            hThree.push(title);
+          });
+
+          const title = item.selectedResults.map((links) => links.title);
+          console.log("title", title);
+          console.log("innerText", hThree);
+
+          hThree.forEach((value) => {
+            if (title.includes(value.innerText)) {
+              console.log("value", value);
+              value.style.backgroundColor = "#DFFF00";
+            }
+          });
+        } else {
+          console.log("previosly not StoredThis Query", query);
+        }
+      });
+    }
+  });
+};
+
 // Function to store selected search results in the local storage from the google search results page
 function getSelectedResults() {
   // getting search query
   const query = getQuery();
   console.log("queries", query);
+  if (query) {
+    handlePrevioslyStoredQuery(query);
+  }
 
   // Get all the search results
   const results = document.querySelectorAll("div.g");
