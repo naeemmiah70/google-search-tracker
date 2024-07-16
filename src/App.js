@@ -16,37 +16,33 @@ function App() {
     });
   }, [resultUpdated]);
 
-  // chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  //   if (message.type === "resultsStored") {
-  //     setReseultUpdated((resultUpdated) => !resultUpdated);
-  //   }
-  // });
-  // console.log("status", resultUpdated);
 
   //function to remove all data
   const handleClearData = () => {
     chrome.storage.local.remove("searchResults", function () {
       console.log("cleared chrome local storage data ");
       setReseultUpdated((resultUpdated) => !resultUpdated);
+      handleDeletedStatus();
     });
   };
   // console.log("searchResults from app", results);
 
   // function to remove the query
   const handleRemoveQuery = (index) => {
-    if (index > -1 && index < results.length) {
-      results.splice(index, 1);
+    if (index > -1 && index < results?.length) {
+      results?.splice(index, 1);
     }
     // console.log("updated results", results);
     handleUpdateResultStorage(results);
+    handleDeletedStatus();
   };
 
   // function to remove the query results links
   const handleRemoveLink = (outerIndex, nestedIndex) => {
     console.log("link index", outerIndex, nestedIndex);
 
-    if (outerIndex > -1 && outerIndex < results.length) {
-      let nestedArray = results[outerIndex].selectedResults;
+    if (outerIndex > -1 && outerIndex < results?.length) {
+      let nestedArray = results[outerIndex]?.selectedResults;
       // console.log("nestedarray", nestedArray)
       if (nestedArray && nestedIndex > -1 && nestedIndex < nestedArray.length) {
         nestedArray.splice(nestedIndex, 1);
@@ -60,6 +56,19 @@ function App() {
   const handleUpdateResultStorage = (results) => {
     chrome.storage.local.set({ searchResults: results });
     setReseultUpdated((resultUpdated) => !resultUpdated);
+    handleDeletedStatus();
+  };
+
+  const handleDeletedStatus = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { status: true },
+        (response) => {
+          console.log(response.reply);
+        }
+      );
+    });
   };
 
   return (
@@ -69,7 +78,7 @@ function App() {
         <hr />
         <h3>Yours last five queries with top five results:</h3>
       </div>
-      {results.length ? (
+      {results?.length ? (
         <div className="content-body">
           {results?.map((item, outerIndex) => (
             <div className="query-card">

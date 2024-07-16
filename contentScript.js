@@ -1,6 +1,6 @@
 /*global chrome */
 console.log(`contentScript.js loaded`);
-// const selectedResults = [];
+let userQuery = "";
 
 // remove checkedResults when the result page is loaded
 localStorage.removeItem("checkedResults");
@@ -18,8 +18,10 @@ const getQuery = () => {
   return searchQuery;
 };
 
+//function to add color and checked input for already added result
 const handlePrevioslyStoredQuery = (query) => {
-  const hThree = [];
+  const contentObject = [];
+
   chrome.storage.local.get("searchResults", function (data) {
     let searchResults = data.searchResults || [];
 
@@ -29,17 +31,26 @@ const handlePrevioslyStoredQuery = (query) => {
           const results = document.querySelectorAll("div.g");
           results.forEach((result) => {
             const title = result.querySelector("h3");
-            hThree.push(title);
+            const input = result.querySelector("input");
+
+            const contentData = {
+              titles: title,
+              inputs: input,
+            };
+
+            if (title && input) {
+              contentObject.push(contentData);
+            }
           });
-
+          console.log("object", contentObject);
           const title = item.selectedResults.map((links) => links.title);
-          console.log("title", title);
-          console.log("innerText", hThree);
 
-          hThree.forEach((value) => {
-            if (title.includes(value.innerText)) {
+          contentObject.forEach((value) => {
+            console.log("values", value);
+            if (title.includes(value.titles.innerText)) {
               console.log("value", value);
-              value.style.backgroundColor = "#DFFF00";
+              value.titles.style.backgroundColor = "#DFFF00";
+              value.inputs.checked = true;
             }
           });
         } else {
@@ -54,8 +65,10 @@ const handlePrevioslyStoredQuery = (query) => {
 function getSelectedResults() {
   // getting search query
   const query = getQuery();
+
   console.log("queries", query);
   if (query) {
+    userQuery = query;
     handlePrevioslyStoredQuery(query);
   }
 
@@ -86,6 +99,7 @@ function getSelectedResults() {
           // highlighting the selected link titile
           title.style.backgroundColor = "#DFFF00";
         } else {
+          title.style.backgroundColor = "transparent";
           const indexToRemove = selectedResults.findIndex(
             (item) => item.link === link.href
           );
@@ -138,10 +152,11 @@ function storeSearchResults(resultsData) {
     }
     console.log("stored data", searchResults);
 
+    //data sending to background for just practicing
     try {
       chrome?.runtime?.sendMessage(
         {
-          type: "lastFiveResults",
+          type: "selectedResults",
           data: searchResults,
         },
         (response) => {
@@ -184,8 +199,16 @@ const domContentLoaded = () => {
 // calling function when the google reasult page content is loaded
 domContentLoaded();
 
+// reloading the page for removing the checked input and highlighted links
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log("recieving message from app.js status", request.status);
+  if (request.status) {
+    window.location.reload();
+  }
+});
+
 // Listen for messages from the background script
-// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-//   console.log("recieving message from background.js", request.results);
-//   sendResponse({ reply: "recieved message from contentScript" });
-// });
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log("recieving message from background.js", request.results);
+  sendResponse({ reply: "recieved message from contentScript" });
+});
