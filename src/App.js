@@ -34,7 +34,6 @@ function App() {
     }
     // console.log("updated results", results);
     handleUpdateResultStorage(results);
-    handleDeletedStatus();
   };
 
   // function to remove the query results links
@@ -56,7 +55,6 @@ function App() {
   const handleUpdateResultStorage = (results) => {
     chrome.storage.local.set({ searchResults: results });
     setReseultUpdated((resultUpdated) => !resultUpdated);
-    handleDeletedStatus();
   };
 
   const handleDeletedStatus = () => {
